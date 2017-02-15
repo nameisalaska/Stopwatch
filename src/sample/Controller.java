@@ -7,7 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class Controller implements Initializable {
+public class Controller {
     @FXML
     private Label label;
     @FXML
@@ -17,9 +17,9 @@ public class Controller implements Initializable {
     private long min = 0;
     private long hour = 0;
 
-   private boolean isControl = true; // for button "Pause/Play"
-   private boolean isThread = true; // for stop count time
-   private boolean isStart = true;  // for button "Start"
+   private boolean isPaused; // for button "Pause/Play"
+   private boolean isThread ; // for stop count time
+   private boolean isStarted ;  // for button "Start"
 
    private static Thread threadforUpdate;
 
@@ -30,8 +30,6 @@ public class Controller implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    public void initialize(java.net.URL location, java.util.ResourceBundle resources) { }
 
     public void updateTheClock() {
         if (sec < 60) {
@@ -49,11 +47,12 @@ public class Controller implements Initializable {
 
     @FXML
     public void start() {
-        if(isStart) {
+        if(!isStarted) {
             threadforUpdate = new Thread(new AffableThread());
             threadforUpdate.start();
-            isStart = false;
-        }else{ isThread = true;}
+            isStarted = true;
+        }
+        isThread = true;
     }
 
     @FXML
@@ -65,14 +64,14 @@ public class Controller implements Initializable {
 
     @FXML
     public void pause() {
-        if (isControl) {
+        if (!isPaused) {
             isThread = false;
             buttonPause.setText("Play");
-            isControl = false;
+            isPaused = true;
         } else {
             start();
             buttonPause.setText("Pause");
-            isControl = true;
+            isPaused = false;
         }
     }
 
